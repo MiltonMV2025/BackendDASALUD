@@ -14,6 +14,7 @@ public class CitaRepository : ICitaRepository
         _context = context;
     }
 
+
     public async Task<PagedResult<AppointmentRowDto>> GetPagedAsync(int page, int pageSize, string? q, CancellationToken cancellationToken = default)
     {
         var query = _context.Citas
@@ -123,5 +124,45 @@ public class CitaRepository : ICitaRepository
         _context.Citas.Update(cita);
         await _context.SaveChangesAsync(cancellationToken);
         return true;
+    }
+
+    public async Task<IEnumerable<DoctorCatalogDto>> GetDoctorsCatalogAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Empleados
+            .Where(e => e.Activo)
+            .Include(e => e.Persona)
+            .Include(e => e.Especialidad)
+            .Select(e => new DoctorCatalogDto(
+                e.IdEmpleado,
+                e.Persona.Nombres + " " + e.Persona.Apellidos,
+                e.Especialidad.NombreEspecialidad
+            ))
+            .ToListAsync(cancellationToken)
+            .ContinueWith(task => task.Result.OrderBy(d => d.FullName), cancellationToken);
+    }
+
+    public async Task<IEnumerable<PatientCatalogDto>> GetPatientsCatalogAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Pacientes
+            .Where(p => p.Activo)
+            .Include(p => p.Persona)
+            .Select(p => new PatientCatalogDto(
+                p.IdPaciente,
+                p.Persona.Nombres + " " + p.Persona.Apellidos
+            ))
+            .ToListAsync(cancellationToken)
+            .ContinueWith(task => task.Result.OrderBy(p => p.FullName), cancellationToken);
+    }
+
+    public async Task<IEnumerable<AppointmentStatusDto>> GetStatusesCatalogAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.EstadosCitas
+            .Where(s => s.Activo)
+            .Select(s => new AppointmentStatusDto(
+                s.IdEstado,
+                s.NombreEstado
+            ))
+            .ToListAsync(cancellationToken)
+            .ContinueWith(task => task.Result.OrderBy(s => s.NombreEstado), cancellationToken);
     }
 }

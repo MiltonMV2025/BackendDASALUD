@@ -40,3 +40,19 @@ public record AppointmentDetailsDto(
 );
 
 public record PagedResult<T>(IEnumerable<T> Items, int Page, int PageSize, int TotalItems, int TotalPages);
+
+public record DoctorCatalogDto(
+    int IdEmpleado,
+    string FullName,
+    string Especialidad
+);
+
+public record PatientCatalogDto(
+    int IdPaciente,
+    string FullName
+);
+
+public record AppointmentStatusDto(
+    int IdEstado,
+    string NombreEstado
+);

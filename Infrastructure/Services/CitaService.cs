@@ -36,4 +36,19 @@ public class CitaService : ICitaService
     {
         return _citaRepository.UpdateAsync(dto, cancellationToken);
     }
+
+    public Task<IEnumerable<DoctorCatalogDto>> GetDoctorsCatalogAsync(CancellationToken cancellationToken = default)
+    {
+        return _citaRepository.GetDoctorsCatalogAsync(cancellationToken);
+    }
+
+    public Task<IEnumerable<PatientCatalogDto>> GetPatientsCatalogAsync(CancellationToken cancellationToken = default)
+    {
+        return _citaRepository.GetPatientsCatalogAsync(cancellationToken);
+    }
+
+    public Task<IEnumerable<AppointmentStatusDto>> GetStatusesCatalogAsync(CancellationToken cancellationToken = default)
+    {
+        return _citaRepository.GetStatusesCatalogAsync(cancellationToken);
+    }
 }
