@@ -1,15 +1,9 @@
-using Domain.Models;
-using Application.DTOs;
+﻿using Application.DTOs;
 
 namespace Application.Interfaces
 {
-    public interface IEmpleadoRepository
+    public interface IEmpleadoService
     {
-        Task<Empleado?> GetByUsernameAsync(
-            string username,
-            CancellationToken cancellationToken = default
-        );
-
         Task<PagedResult<EmpleadoRowDto>> GetPagedAsync(
             int page,
             int pageSize,
@@ -17,10 +11,9 @@ namespace Application.Interfaces
             CancellationToken cancellationToken = default
         );
 
-        // Crear Persona + Empleado en la misma transacci�n
+        // Crear Persona + Empleado (flujo opción A sin hashing)
         Task<int> CreateAsync(
-            Persona persona,
-            Empleado empleado,
+            CreateEmpleadoDto dto,
             CancellationToken cancellationToken = default
         );
 
@@ -34,10 +27,16 @@ namespace Application.Interfaces
             CancellationToken cancellationToken = default
         );
 
-        // Solo cambia estado "Activo"
+        // Activar / desactivar (SoftDelete mejorado)
         Task<bool> SetActivoAsync(
             int id,
             bool activo,
+            CancellationToken cancellationToken = default
+        );
+
+        // Obtener empleado por su username exacto
+        Task<EmpleadoDetailsDto?> GetByUsernameAsync(
+            string username,
             CancellationToken cancellationToken = default
         );
     }
