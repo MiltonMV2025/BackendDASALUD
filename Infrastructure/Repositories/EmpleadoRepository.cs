@@ -1,8 +1,9 @@
-﻿using Application.Interfaces;
-using Domain.Models;
-using Infrastructure.Persistence;
-using Microsoft.EntityFrameworkCore;
+﻿using Domain.Models;
 using Application.DTOs;
+using Application.Interfaces;
+using Infrastructure.Persistence;
+using Infrastructure.Helpers; // <- para PasswordHelper
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -116,9 +117,20 @@ namespace Infrastructure.Repositories
 
             if (empleado == null) return false;
 
+            // Campos de Empleado
+            empleado.Usuario = dto.Usuario;
             empleado.IdRol = dto.IdRol;
             empleado.IdEspecialidad = dto.IdEspecialidad ?? 0;
+            empleado.Activo = dto.Activo;
 
+            // Cambiar contraseña solo si viene algo
+            if (!string.IsNullOrWhiteSpace(dto.Password))
+            {
+                // Guardar SIEMPRE el hash
+                empleado.Contrasena = PasswordHelper.HashPassword(dto.Password);
+            }
+
+            // Campos de Persona
             if (empleado.Persona != null)
             {
                 empleado.Persona.Nombres = dto.Nombres;
@@ -126,6 +138,7 @@ namespace Infrastructure.Repositories
                 empleado.Persona.Telefono = dto.Telefono;
                 empleado.Persona.Correo = dto.Correo;
                 empleado.Persona.Direccion = dto.Direccion;
+                empleado.Persona.DUI = dto.DUI;
             }
 
             await _context.SaveChangesAsync(cancellationToken);
@@ -153,7 +166,8 @@ namespace Infrastructure.Repositories
                 e.Rol != null ? e.Rol.NombreRol : string.Empty,
                 e.IdEspecialidad == 0 ? (int?)null : e.IdEspecialidad,
                 e.Especialidad != null ? e.Especialidad.NombreEspecialidad : null,
-                e.Persona != null ? e.Persona.Nombres + " " + e.Persona.Apellidos : string.Empty,
+                e.Persona?.Nombres ?? string.Empty,
+                e.Persona?.Apellidos ?? string.Empty,
                 e.Persona?.Correo,
                 e.Persona?.DUI,
                 e.Persona?.Telefono,

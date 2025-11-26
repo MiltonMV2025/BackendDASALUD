@@ -39,10 +39,12 @@ public record CreateEmpleadoDto(
 // EDITAR EMPLEADO → EDITA PERSONA + EMPLEADO
 // =============================================
 //
-// Usuario NO se puede cambiar, aunque venga en el DTO.
+// Ahora SÍ se puede cambiar Usuario.
+// Password es opcional: si viene null o vacío, se deja la actual.
 public record EditEmpleadoDto(
     int IdEmpleado,
-    string Usuario,  // ignorado para actualizaciones, solo para lectura
+    string Usuario,      // se actualiza
+    string? Password,    // NUEVO: para cambiar contraseña (opcional)
     string Nombres,
     string Apellidos,
     string? Correo,
@@ -57,6 +59,8 @@ public record EditEmpleadoDto(
 // =============================================
 // DETALLES → PARA FORMULARIOS DE EDICIÓN
 // =============================================
+//
+// Separamos Nombres y Apellidos para llenar el formulario.
 public record EmpleadoDetailsDto(
     int IdEmpleado,
     string Usuario,
@@ -64,7 +68,8 @@ public record EmpleadoDetailsDto(
     string RolNombre,
     int? IdEspecialidad,
     string? EspecialidadNombre,
-    string PersonaNombre,
+    string Nombres,
+    string Apellidos,
     string? Correo,
     string? DUI,
     string? Telefono,

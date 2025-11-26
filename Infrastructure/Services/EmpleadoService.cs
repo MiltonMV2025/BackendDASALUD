@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Models;
+using Infrastructure.Helpers; // <- para PasswordHelper
 
 namespace Infrastructure.Services;
 
@@ -55,11 +56,12 @@ public class EmpleadoService : IEmpleadoService
             e.Rol?.NombreRol ?? string.Empty,
             e.IdEspecialidad == 0 ? (int?)null : e.IdEspecialidad,
             e.Especialidad?.NombreEspecialidad,
-            $"{e.Persona.Nombres} {e.Persona.Apellidos}",
-            e.Persona.Correo,
-            e.Persona.DUI,
-            e.Persona.Telefono,
-            e.Persona.Direccion,
+            e.Persona?.Nombres ?? string.Empty,
+            e.Persona?.Apellidos ?? string.Empty,
+            e.Persona?.Correo,
+            e.Persona?.DUI,
+            e.Persona?.Telefono,
+            e.Persona?.Direccion,
             e.Activo
         );
     }
@@ -82,14 +84,18 @@ public class EmpleadoService : IEmpleadoService
             Direccion = dto.Direccion
         };
 
+        // Determinar la contraseña en texto plano (para luego hashearla)
+        var rawPassword = string.IsNullOrWhiteSpace(dto.Password)
+            ? GeneratePassword()
+            : dto.Password!;
+
         var empleado = new Empleado
         {
             Usuario = string.IsNullOrWhiteSpace(dto.Usuario)
                 ? GenerateUsername(dto.Nombres, dto.Apellidos)
                 : dto.Usuario,
-            Contrasena = string.IsNullOrWhiteSpace(dto.Password)
-                ? GeneratePassword()
-                : dto.Password,
+            // Guardar SIEMPRE el hash en la BD
+            Contrasena = PasswordHelper.HashPassword(rawPassword),
             IdRol = dto.IdRol,
             IdEspecialidad = dto.IdEspecialidad ?? 0,
             Activo = dto.Activo
@@ -126,6 +132,9 @@ public class EmpleadoService : IEmpleadoService
     // ======================================================
     private string GenerateUsername(string nombres, string apellidos)
     {
+        if (string.IsNullOrWhiteSpace(nombres) || string.IsNullOrWhiteSpace(apellidos))
+            return Guid.NewGuid().ToString("N")[..8].ToLower();
+
         // Ejemplo simple: primera letra nombre + apellido, todo en minúsculas
         return $"{nombres[0]}{apellidos}".ToLower();
     }

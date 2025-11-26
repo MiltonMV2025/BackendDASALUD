@@ -11,7 +11,7 @@ namespace Application.Interfaces
             CancellationToken cancellationToken = default
         );
 
-        // Crear Persona + Empleado (flujo opción A sin hashing)
+        // Crear Persona + Empleado (flujo opción A sin hashing por ahora)
         Task<int> CreateAsync(
             CreateEmpleadoDto dto,
             CancellationToken cancellationToken = default

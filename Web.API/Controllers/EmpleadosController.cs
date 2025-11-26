@@ -68,7 +68,7 @@ public class EmpleadosController : ControllerBase
 
     // Cambiar activo/inactivo SOLO cambia la propiedad Activo
     // Ej: PUT api/empleados/5/activo?value=false
-    [HttpPut("{id}/activo")]
+    [HttpDelete("{id}/activo")]
     [ProducesResponseType(typeof(ResponseDto<object>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseDto<object>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ResponseDto<object>>> SetActivo(int id, [FromQuery] bool value)
@@ -85,16 +85,16 @@ public class EmpleadosController : ControllerBase
         ));
     }
 
-    [HttpGet("by-username/{username}")]
-    [ProducesResponseType(typeof(ResponseDto<EmpleadoDetailsDto>), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ResponseDto<object>), StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<ResponseDto<EmpleadoDetailsDto>>> GetByUsername(string username)
-    {
-        var dto = await _empleadoService.GetByUsernameAsync(username);
+    //[HttpGet("by-username/{username}")]
+    //[ProducesResponseType(typeof(ResponseDto<EmpleadoDetailsDto>), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(ResponseDto<object>), StatusCodes.Status404NotFound)]
+    //public async Task<ActionResult<ResponseDto<EmpleadoDetailsDto>>> GetByUsername(string username)
+    //{
+    //    var dto = await _empleadoService.GetByUsernameAsync(username);
 
-        if (dto == null)
-            return NotFound(new ResponseDto<object>("Empleado no encontrado", false, null));
+    //    if (dto == null)
+    //        return NotFound(new ResponseDto<object>("Empleado no encontrado", false, null));
 
-        return Ok(new ResponseDto<EmpleadoDetailsDto>("Empleado encontrado", true, dto));
-    }
+    //    return Ok(new ResponseDto<EmpleadoDetailsDto>("Empleado encontrado", true, dto));
+    //}
 }
