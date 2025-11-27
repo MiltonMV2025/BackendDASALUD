@@ -7,6 +7,10 @@ namespace Application.Interfaces
         Task<int> GetPacientesAtendidosAsync(CancellationToken cancellationToken = default);
         Task<int> GetConsultasPendientesAsync(CancellationToken cancellationToken = default);
         Task<int> GetTotalConsultasAsync(CancellationToken cancellationToken = default);
+
+        Task<decimal> GetTotalIngresosAsync(CancellationToken cancellationToken = default);
+        Task<List<ConcurrenciaDataDto>> GetConcurrenciaAsync(CancellationToken cancellationToken = default);
+
         Task<List<ConsultasPorMesDto>> GetConsultasPorMesAsync(int months, CancellationToken cancellationToken = default);
         Task<List<ConsultasPorEspecialidadDto>> GetConsultasPorEspecialidadAsync(int top, CancellationToken cancellationToken = default);
     }
