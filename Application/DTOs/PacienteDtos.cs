@@ -10,6 +10,10 @@
 
         public string NombreCompleto => $"{Nombres} {Apellidos}";
 
+        public string? Dui { get; set; }
+
+        public string? Direccion { get; set; }
+
         public string? Correo { get; set; }
 
         public string? Telefono { get; set; }
@@ -20,25 +24,29 @@
 
         public decimal? Altura { get; set; }
     }
+
+    public record CreatePacienteDto(
+        string Nombres,
+        string Apellidos,
+        string? Dui,
+        string? Direccion,
+        string? Correo,
+        string? Telefono,
+        string? TipoSangre,
+        decimal? Peso,
+        decimal? Altura
+    );
+
+    public record EditPacienteDto(
+        int IdPaciente,
+        string Nombres,
+        string Apellidos,
+        string? Dui,
+        string? Direccion,
+        string? Correo,
+        string? Telefono,
+        string? TipoSangre,
+        decimal? Peso,
+        decimal? Altura
+    );
 }
-
-public record CreatePacienteDto(
-    string Nombres,
-    string Apellidos,
-    string? Correo,
-    string? Telefono,
-    string? TipoSangre,
-    decimal? Peso,
-    decimal? Altura
-);
-
-public record EditPacienteDto(
-    int IdPaciente,
-    string Nombres,
-    string Apellidos,
-    string? Correo,
-    string? Telefono,
-    string? TipoSangre,
-    decimal? Peso,
-    decimal? Altura
-);

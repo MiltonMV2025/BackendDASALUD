@@ -39,6 +39,8 @@ public class PacienteRepository : IPacienteRepository
                 p.Persona.Apellidos.Contains(q) ||
                 (p.Persona.Correo != null && p.Persona.Correo.Contains(q)) ||
                 (p.Persona.Telefono != null && p.Persona.Telefono.Contains(q)) ||
+                (p.Persona.DUI != null && p.Persona.DUI.Contains(q)) ||        // DUI de la entidad
+                (p.Persona.Direccion != null && p.Persona.Direccion.Contains(q)) ||
                 (p.TipoSangre != null && p.TipoSangre.Contains(q))
             );
         }
@@ -56,6 +58,8 @@ public class PacienteRepository : IPacienteRepository
                 IdPaciente = p.IdPaciente,
                 Nombres = p.Persona.Nombres,
                 Apellidos = p.Persona.Apellidos,
+                Dui = p.Persona.DUI,                 // mapea DUI -> Dui del DTO
+                Direccion = p.Persona.Direccion,
                 Correo = p.Persona.Correo,
                 Telefono = p.Persona.Telefono,
                 TipoSangre = p.TipoSangre,
@@ -83,6 +87,8 @@ public class PacienteRepository : IPacienteRepository
             IdPaciente = p.IdPaciente,
             Nombres = p.Persona.Nombres,
             Apellidos = p.Persona.Apellidos,
+            Dui = p.Persona.DUI,                 // igual aquí
+            Direccion = p.Persona.Direccion,
             Correo = p.Persona.Correo,
             Telefono = p.Persona.Telefono,
             TipoSangre = p.TipoSangre,
@@ -103,7 +109,8 @@ public class PacienteRepository : IPacienteRepository
             Apellidos = dto.Apellidos,
             Correo = dto.Correo,
             Telefono = dto.Telefono,
-            // DUI y Direccion los puedes agregar después si los quieres manejar
+            DUI = dto.Dui,                  // DTO.Dui -> entidad.DUI
+            Direccion = dto.Direccion
         };
 
         _context.Personas.Add(persona);
@@ -140,6 +147,8 @@ public class PacienteRepository : IPacienteRepository
         paciente.Persona.Apellidos = dto.Apellidos;
         paciente.Persona.Correo = dto.Correo;
         paciente.Persona.Telefono = dto.Telefono;
+        paciente.Persona.DUI = dto.Dui;            // DTO.Dui -> entidad.DUI
+        paciente.Persona.Direccion = dto.Direccion;
 
         paciente.TipoSangre = dto.TipoSangre;
         paciente.Peso = dto.Peso;

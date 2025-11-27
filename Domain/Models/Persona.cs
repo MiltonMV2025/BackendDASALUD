@@ -35,5 +35,6 @@ namespace Domain.Models
         [MaxLength(255)]
         [Column("direccion")]
         public string? Direccion { get; set; }
+
     }
 }
