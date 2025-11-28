@@ -10,32 +10,29 @@ namespace Web.API.Controllers;
 [Authorize]
 public class DashboardController : ControllerBase
 {
-    private readonly IDashboardRepository _dashboardRepository;
+    private readonly IDashboardRepository _repo;
 
     public DashboardController(IDashboardRepository dashboardRepository)
     {
-        _dashboardRepository = dashboardRepository;
+        _repo = dashboardRepository;
     }
 
     [HttpGet("summary")]
-    public async Task<IActionResult> GetSummary()
+    public async Task<ActionResult<ResponseDto<DashboardSummaryDto>>> GetSummary()
     {
-        var pacientesAtendidos = await _dashboardRepository.GetPacientesAtendidosAsync();
-        var consultasPendientes = await _dashboardRepository.GetConsultasPendientesAsync();
-        var totalConsultas = await _dashboardRepository.GetTotalConsultasAsync();
-        var consultasPorMes = await _dashboardRepository.GetConsultasPorMesAsync(6);
-        var consultasPorEspecialidad = await _dashboardRepository.GetConsultasPorEspecialidadAsync(6);
-
-        var data = new
+        var summary = new DashboardSummaryDto
         {
-            PacientesAtendidos = pacientesAtendidos,
-            ConsultasPendientes = consultasPendientes,
-            TotalConsultas = totalConsultas,
-            ConsultasPorMes = consultasPorMes,
-            ConsultasPorEspecialidad = consultasPorEspecialidad
+            PacientesAtendidos = await _repo.GetPacientesAtendidosAsync(),
+            ConsultasPendientes = await _repo.GetConsultasPendientesAsync(),
+            TotalConsultas = await _repo.GetTotalConsultasAsync(),
+
+            TotalIngresos = await _repo.GetTotalIngresosAsync(),
+            DataConcurrencia = await _repo.GetConcurrenciaAsync(),
+
+            ConsultasPorMes = await _repo.GetConsultasPorMesAsync(6),
+            ConsultasPorEspecialidad = await _repo.GetConsultasPorEspecialidadAsync(6)
         };
 
-        var response = new ResponseDto<object>("Resumen obtenido correctamente", true, data);
-        return Ok(response);
+        return Ok(new ResponseDto<DashboardSummaryDto>("Resumen obtenido correctamente", true, summary));
     }
 }
