@@ -13,6 +13,8 @@ Requisitos
 - .NET 8 SDK (https://dotnet.microsoft.com/)
 - SQL Server / SQL Server Express / LocalDB
 
+Correr el archivo de base de datos dentro de la carpeta Database para crear la base de datos inicial.
+
 Clonar el repositorio
 
 ```bash
