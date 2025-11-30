@@ -35,7 +35,7 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = true;
+    options.RequireHttpsMetadata = false;
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -94,13 +94,20 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "DASALUD API V1");
+    c.RoutePrefix = "swagger";
+});
 
-app.UseHttpsRedirection();
+if (app.Environment.IsProduction())
+{
+}
+else
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseCors("AllowAll");
 
@@ -108,5 +115,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGet("/", () => Results.Json(new { 
+    status = "OK", 
+    message = "DASALUD API está funcionando correctamente",
+    timestamp = DateTime.UtcNow,
+    endpoints = new {
+        swagger = "/swagger",
+        health = "/health"
+    }
+}));
+
+app.MapGet("/health", () => Results.Ok(new { 
+    status = "Healthy", 
+    timestamp = DateTime.UtcNow 
+}));
 
 app.Run();
