@@ -12,7 +12,6 @@ Requisitos
 
 - .NET 8 SDK (https://dotnet.microsoft.com/)
 - SQL Server / SQL Server Express / LocalDB
-- (Opcional) `dotnet-ef` para ejecutar migraciones
 
 Clonar el repositorio
 
@@ -23,7 +22,7 @@ cd BackendDASALUD
 
 Configuración
 
-1. Actualizar `Web.API/appsettings.json` con la cadena de conexión de su base de datos y la configuración JWT. Ejemplo:
+Actualizar `Web.API/appsettings.json` con la cadena de conexión de su base de datos y la configuración JWT. Ejemplo:
 
 ```json
 {
@@ -39,8 +38,6 @@ Configuración
 }
 ```
 
-2. Para mayor seguridad, use variables de entorno en lugar de dejar secretos en `appsettings.json`. Por ejemplo `ConnectionStrings__Default`, `Jwt__Key`, `Jwt__Issuer`, etc.
-
 Compilar y ejecutar
 
 1. Restaurar paquetes y compilar:
@@ -49,21 +46,7 @@ Compilar y ejecutar
 dotnet restore
 dotnet build
 ```
-
-2. (Opcional) Instalar herramienta EF Core si necesita ejecutar migraciones:
-
-```bash
-dotnet tool install --global dotnet-ef
-dotnet add Infrastructure package Microsoft.EntityFrameworkCore.Design
-```
-
-3. Ejecutar migraciones (si aplica):
-
-```bash
-dotnet ef database update --project Infrastructure --startup-project Web.API
-```
-
-4. Ejecutar la API:
+2. Ejecutar la API:
 
 ```bash
 dotnet run --project Web.API
@@ -82,17 +65,3 @@ Variables de entorno útiles
 - `ASPNETCORE_ENVIRONMENT=Development`
 - `ConnectionStrings__Default`
 - `Jwt__Key`, `Jwt__Issuer`, `Jwt__Audience`, `Jwt__ExpiresMinutes`
-
-Notas
-
-- Cambiar cualquier secreto y claves antes de desplegar a producción.
-- Revisar la carpeta `Infrastructure` para detalles de persistencia y migraciones.
-
-Contribuir
-
-- Abrir issues para reportar errores o proponer mejoras.
-- Crear ramas con nombres descriptivos y enviar Pull Requests.
-
-Licencia
-
-- Revisar el repositorio para información sobre la licencia.
